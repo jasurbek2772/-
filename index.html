@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Секретное письмо для тебя</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <style>
+    :root {
+      --font-sans: 'Montserrat', sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    body {
+      background-color: #FFF5F7;
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #app {
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem 3rem;
+      background: transparent;
+      width: 100%;
+    }
+
+    .page { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 1.5rem; 
+      width: 100%; 
+      max-width: 500px; 
+    }
+    
+    .page.hidden { 
+      display: none; 
+    }
+
+    .heart-icon {
+      width: 80px; 
+      height: 80px; 
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F4C0D1, #ED93B1);
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 4px 24px #ED93B144;
+    }
+
+    .main-title {
+      font-size: 24px; 
+      font-weight: 500; 
+      color: #D4537E; 
+      text-align: center; 
+      line-height: 1.4;
+    }
+    
+    .main-sub {
+      font-size: 15px; 
+      color: #993556; 
+      text-align: center; 
+      line-height: 1.6; 
+      opacity: 0.8;
+    }
+
+    .card {
+      background: #FBEAF0; 
+      border: 0.5px solid #F4C0D1;
+      border-radius: 16px; 
+      padding: 1.5rem 1.75rem; 
+      width: 100%;
+    }
+
+    .card-label {
+      font-size: 11px; 
+      color: #993556; 
+      letter-spacing: 0.1em; 
+      text-transform: uppercase;
+      text-align: center; 
+      margin-bottom: 1rem; 
+      opacity: 0.7;
+    }
+
+    .timer-row {
+      display: flex; 
+      align-items: flex-start; 
+      justify-content: center; 
+      gap: 6px;
+    }
+    
+    .timer-unit { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 4px; 
+    }
+    
+    .timer-num {
+      font-size: 32px; 
+      font-weight: 500; 
+      color: #D4537E;
+      font-variant-numeric: tabular-nums; 
+      line-height: 1;
+    }
+    
+    .timer-u-label { 
+      font-size: 11px; 
+      color: #993556; 
+      opacity: 0.6; 
+    }
+    
+    .timer-sep { 
+      font-size: 28px; 
+      color: #ED93B1; 
+      font-weight: 500; 
+      padding-top: 2px; 
+      line-height: 1; 
+    }
+
+    .pin-section { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 1rem; 
+      width: 100%; 
+    }
+    
+    .pin-label { 
+      font-size: 15px; 
+      color: #D4537E; 
+      text-align: center; 
+      font-weight: 500; 
+    }
+
+    #dateInput {
+      width: 100%; 
+      padding: 12px 16px; 
+      font-size: 16px;
+      border: 1.5px solid #ED93B1; 
+      border-radius: 12px;
+      background: white; 
+      color: #993556;
+      outline: none; 
+      font-family: var(--font-sans);
+      transition: border-color 0.2s;
+      text-align: center;
+    }
+    
+    #dateInput:focus { 
+      border-color: #D4537E; 
+      box-shadow: 0 0 0 3px #F4C0D144; 
+    }
+    
+    #dateInput.error { 
+      border-color: #E24B4A; 
+      background: #FFF0F0; 
+      animation: shake 0.4s ease; 
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    .pin-error { 
+      font-size: 13px; 
+      color: #E24B4A; 
+      min-height: 18px; 
+      opacity: 0; 
+      transition: opacity 0.2s; 
+      text-align: center; 
+    }
+    
+    .pin-error.show { 
+      opacity: 1; 
+    }
+    
+    .pin-hint {
+      font-size: 13px; 
+      color: #993556; 
+      text-align: center; 
+      line-height: 1.6;
+      background: #F4C0D144; 
+      border: 0.5px solid #F4C0D1;
+      border-radius: 10px; 
+      padding: 0.75rem 1rem; 
+      opacity: 0.9;
+      display: flex; 
+      align-items: flex-start; 
+      gap: 10px;
+      width: 100%;
+    }
+
+    .pin-hint-text {
+      text-align: left;
+      flex: 1;
+    }
+
+    .open-btn {
+      padding: 12px 32px; 
+      background: #D4537E; 
+      color: white;
+      border: none; 
+      border-radius: 99px; 
+      font-size: 16px; 
+      font-weight: 500;
+      cursor: pointer; 
+      font-family: var(--font-sans);
+      transition: background 0.2s, transform 0.1s;
+      display: flex; 
+      align-items: center; 
+      gap: 8px;
+    }
+    
+    .open-btn:hover { 
+      background: #993556; 
+    }
+    
+    .open-btn:active { 
+      transform: scale(0.97); 
+    }
+
+    .letter-section {
+      display: none; 
+      flex-direction: column; 
+      align-items: center;
+      gap: 1.5rem; 
+      width: 100%; 
+      max-width: 520px;
+      animation: fadeUp 0.7s ease forwards;
+    }
+    
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .letter-card {
+      background: #FBEAF0; 
+      border: 0.5px solid #F4C0D1;
+      border-radius: 20px; 
+      padding: 2.5rem 2rem; 
+      width: 100%; 
+      position: relative;
+      box-shadow: 0 2px 32px #ED93B122;
+    }
+    
+    .letter-quote { 
+      position: absolute; 
+      top: 1rem; 
+      left: 1.5rem; 
+      font-size: 56px; 
+      line-height: 1; 
+      color: #F4C0D1; 
+      font-family: var(--font-serif); 
+      user-select: none; 
+    }
+    
+    .letter-text { 
+      font-size: 16px; 
+      color: #4B1528; 
+      line-height: 1.9; 
+      padding-top: 1.75rem; 
+      white-space: pre-wrap; 
+      font-family: var(--font-serif); 
+    }
+    
+    .letter-sign { 
+      text-align: right; 
+      font-size: 15px; 
+      color: #993556; 
+      font-style: italic; 
+      padding-top: 1.25rem; 
+      border-top: 0.5px solid #F4C0D1; 
+      margin-top: 1.25rem; 
+      font-family: var(--font-serif); 
+    }
+
+    .sparkles { 
+      font-size: 20px; 
+      display: flex; 
+      gap: 12px; 
+      justify-content: center; 
+      color: #D4537E; 
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Секретное письмо для тебя</h1>
+
+    <div class="page" id="timerPage">
+      <div class="heart-icon">🌸</div>
+      <p class="main-title">Кое-что важное для тебя</p>
+      <p class="main-sub">Я подготовил кое-что особенное.<br>Ещё чуть-чуть — и ты узнаешь.</p>
+
+      <div class="card">
+        <p class="card-label">Осталось подождать</p>
+        <div class="timer-row">
+          <div class="timer-unit">
+            <span class="timer-num" id="tDays">00</span>
+            <span class="timer-u-label">дней</span>
+          </div>
+          <span class="timer-sep">:</span>
+          <div class="timer-unit">
+            <span class="timer-num" id="tHours">00</span>
+            <span class="timer-u-label">часов</span>
+          </div>
+          <span class="timer-sep">:</span>
+          <div class="timer-unit">
+            <span class="timer-num" id="tMins">00</span>
+            <span class="timer-u-label">минут</span>
+          </div>
+          <span class="timer-sep">:</span>
+          <div class="timer-unit">
+            <span class="timer-num" id="tSecs">00</span>
+            <span class="timer-u-label">секунд</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page hidden" id="pinPage">
+      <div class="heart-icon">🔑</div>
+      <p class="main-title">Почти там...</p>
+      <p class="main-sub">Таймер истёк. Теперь подтверди,<br>что это именно ты.</p>
+
+      <div class="card">
+        <div class="pin-section">
+          <p class="pin-label">Введи особую дату</p>
+          <input type="date" id="dateInput" aria-label="Введи дату-пин код">
+          <p class="pin-error" id="pinError">Неверная дата, попробуй ещё раз 🌸</p>
+          
+          <div class="pin-hint">
+            <span>💌</span>
+            <div class="pin-hint-text">
+              <span>Пин-код даты скажу при встрече</span><br>
+              <span>Это того стоит</span>
+            </div>
+          </div>
+
+          <button class="open-btn" onclick="checkDate()">
+            <i class="ti ti-lock-open" aria-hidden="true"></i>
+            Открыть письмо
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="letter-section" id="letterSection">
+      <div class="sparkles">✦ ✦ ✦</div>
+      <div class="letter-card">
+        <span class="letter-quote" aria-hidden="true">"</span>
+        <p class="letter-text" id="letterText">Сюда вставь текст твоего письма</p>
+        <div class="letter-sign">
+          <a href="https://t.me/jasurbek27" target="_blank" style="color: #993556; text-decoration: none; border-bottom: 1px dashed #ED93B1;">Jasur</a>
+        </div>
+      </div>
+      <div class="sparkles">✦ ✦ ✦</div>
+    </div>
+  </div>
+
+  <script>
+    const UNLOCK = new Date(Date.UTC(2026, 5, 12, 10, 0, 0));
+    const SECRET_DATE = '2008-12-08';
+
+    function pad(n) { return String(n).padStart(2,'0'); }
+
+    function updateTimer() {
+      const now = new Date();
+      const diff = UNLOCK - now;
+      if (diff <= 0) {
+        showPinPage();
+        return;
+      }
+      const s = Math.floor(diff / 1000);
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
+      document.getElementById('tDays').textContent  = pad(d);
+      document.getElementById('tHours').textContent = pad(h);
+      document.getElementById('tMins').textContent  = pad(m);
+      document.getElementById('tSecs').textContent  = pad(sec);
+    }
+
+    let timerDone = false;
+    function showPinPage() {
+      if (timerDone) return;
+      timerDone = true;
+      document.getElementById('timerPage').classList.add('hidden');
+      document.getElementById('pinPage').classList.remove('hidden');
+    }
+
+    function showErrorMsg(text) {
+      const inp = document.getElementById('dateInput');
+      const errorEl = document.getElementById('pinError');
+      errorEl.textContent = text;
+      errorEl.style.color = '#E24B4A';
+      inp.classList.add('error');
+      setTimeout(() => inp.classList.remove('error'), 1000);
+      errorEl.classList.add('show');
+    }
+
+    function checkDate() {
+      const inp = document.getElementById('dateInput');
+      const val = inp.value;
+
+      if (val !== SECRET_DATE) {
+        showErrorMsg("Неверная дата, попробуй ещё раз 🌸");
+        return;
+      }
+
+      // Открываем письмо мгновенно!
+      document.getElementById('pinPage').classList.add('hidden');
+      const ls = document.getElementById('letterSection');
+      ls.style.display = 'flex';
+
+      // Логи отправляем асинхронно на наш Vercel API
+      sendTelegramNotification();
+    }
+
+    function sendTelegramNotification() {
+      const localTime = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Krasnoyarsk' });
+
+      // Запрашиваем геоданные
+      fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+          const message = `💌 Письмо открыто!\n🕒 Время: ${localTime}\n🌐 IP: ${data.ip}\n📍 Город: ${data.city}, ${data.country_name}\n📱 Браузер: ${navigator.userAgent.substring(0, 100)}...`;
+          postToVercelApi(message);
+        })
+        .catch(() => {
+          const message = `💌 Письмо открыто!\n🕒 Время: ${localTime}\n(Не удалось определить геолокацию)`;
+          postToVercelApi(message);
+        });
+    }
+
+    function postToVercelApi(text) {
+      // Запрос к нашей внутренней серверной функции Vercel
+      fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text })
+      })
+      .then(res => res.json())
+      .catch(err => console.error('Ошибка логирования:', err));
+    }
+
+    document.getElementById('dateInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkDate();
+      document.getElementById('pinError').classList.remove('show');
+      document.getElementById('dateInput').classList.remove('error');
+    });
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
