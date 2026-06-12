@@ -377,7 +377,7 @@
         <span class="letter-quote" aria-hidden="true">"</span>
         <p class="letter-text" id="letterText">Сюда вставь текст твоего письма</p>
         <div class="letter-sign">
-          <a href="https://t.me/jasurbek27" target="_blank" style="color: #993556; text-decoration: none; border-bottom: 1px dashed #ED93B1;">Jasur</a>
+          <a href="https://vk.com/id27" target="_blank" style="color: #993556; text-decoration: none; border-bottom: 1px dashed #ED93B1;">Jasur</a>
         </div>
       </div>
       <div class="sparkles">✦ ✦ ✦</div>
@@ -435,19 +435,16 @@
         return;
       }
 
-      // Открываем письмо мгновенно!
       document.getElementById('pinPage').classList.add('hidden');
       const ls = document.getElementById('letterSection');
       ls.style.display = 'flex';
 
-      // Логи отправляем асинхронно на наш Vercel API
-      sendTelegramNotification();
+      sendVkNotification();
     }
 
-    function sendTelegramNotification() {
+    function sendVkNotification() {
       const localTime = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Krasnoyarsk' });
 
-      // Запрашиваем геоданные
       fetch('https://ipapi.co/json/')
         .then(res => res.json())
         .then(data => {
@@ -461,7 +458,6 @@
     }
 
     function postToVercelApi(text) {
-      // Запрос к нашей внутренней серверной функции Vercel
       fetch('/api/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
