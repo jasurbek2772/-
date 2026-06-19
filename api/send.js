@@ -17,13 +17,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Формируем параметры для API ВКонтакте
     const params = new URLSearchParams({
       access_token: TOKEN,
       user_id: USER_ID,
       message: text,
-      random_id: Math.floor(Math.random() * 2147483647), // Защита от дублей сообщений
-      v: '5.131' // Версия API ВК
+      random_id: Math.floor(Math.random() * 2147483647), 
+      v: '5.131' 
     });
 
     const response = await fetch(`https://api.vk.com/method/messages.send?${params.toString()}`, {
