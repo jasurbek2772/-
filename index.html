@@ -6,11 +6,11 @@
   <title>Секретное письмо для тебя</title>
 
   <meta property="og:title" content="Секретное Письмо" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://secret-coral-nu.vercel.app/4444.jpg" />
-<meta property="og:image:type" content="image/jpeg" />
-<meta property="og:image:width" content="3000" />
-<meta property="og:image:height" content="3000" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://secret-coral-nu.vercel.app/4444.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="3000" />
+  <meta property="og:image:height" content="3000" />
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,7 +99,6 @@
       width: 100%;
     }
 
-    /* Стили для секции с твоим большим письмом */
     .story-text {
       font-family: var(--font-serif);
       font-size: 16px;
@@ -331,6 +330,7 @@
   <div id="app">
     <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Секретное письмо для тебя</h1>
 
+    <!-- ЭТАП 1: ТАЙМЕР -->
     <div class="page" id="timerPage">
       <div class="heart-icon">🌸</div>
       <p class="main-title">Кое-что важное для тебя</p>
@@ -362,13 +362,14 @@
       </div>
     </div>
 
+    <!-- ЭТАП 2: БОЛЬШОЙ ТЕКСТ -->
     <div class="page hidden" id="textPage">
       <div class="heart-icon">✨</div>
       <p class="main-title">Прежде чем идти дальше...</p>
       <p class="main-sub">Мне хотелось сказать тебе несколько слов.</p>
 
       <div class="card">
-<div class="story-text">Ассалому Алейкум! Если ты видишь этот текст, значит, таймер успешно дотикал до самого конца.
+        <div class="story-text">Ассалому Алейкум! Если ты видишь этот текст, значит, таймер успешно дотикал до самого конца.
 
 Честно говоря, мне было непросто начать это письмо. Ведь мы виделись всего пару раз, и я поймал себя на мысли, что почти ничего о тебе не знаю... Но я очень хочу это исправить. 
 
@@ -385,6 +386,7 @@
       </button>
     </div>
 
+    <!-- ЭТАП 3: ФОРМА ПИН-КОДА -->
     <div class="page hidden" id="pinPage">
       <div class="heart-icon">🔑</div>
       <p class="main-title">Почти там...</p>
@@ -412,6 +414,7 @@
       </div>
     </div>
 
+    <!-- ЭТАП 4: ВИДЕОПЛЕЕР -->
     <div class="letter-section" id="letterSection">
       <div class="sparkles">✦ ✦ ✦</div>
       <div class="letter-card">
@@ -443,12 +446,35 @@
   </div>
 
   <script>
-    // Красноярск = UTC+7, поэтому к UTC времени прибавляем 7 часов
-    // 14.06.2026 22:00 KRAT = 14.06.2026 15:00 UTC
     const UNLOCK = new Date(Date.UTC(2026, 5, 19, 15, 30, 0));
     const SECRET_DATE = '2008-12-08';
 
+    let geoData = null;
+    let timerStarted = false;
+    let textPageLogged = false;
+    let pinPageLogged = false;
+
     function pad(n) { return String(n).padStart(2,'0'); }
+
+    // Инициализация получения данных геолокации при загрузке
+    function initGeo() {
+      fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => { geoData = data; })
+        .catch(() => { geoData = { ip: 'Неизвестен', city: 'Неизвестен', country_name: 'Неизвестен' }; })
+        .finally(() => {
+          // После попытки получить гео — проверяем первоначальный статус таймера
+          checkInitialState();
+        });
+    }
+
+    function checkInitialState() {
+      const now = new Date();
+      if (UNLOCK - now > 0) {
+        sendNotification("⏳ Пользователь зашел на сайт: Открыт таймер отсчета");
+        timerStarted = true;
+      }
+    }
 
     function updateTimer() {
       const now = new Date();
@@ -468,20 +494,26 @@
       document.getElementById('tSecs').textContent  = pad(sec);
     }
 
-    let timerDone = false;
-
-    // Срабатывает по окончании таймера: прячет таймер, показывает большой текст
+    // Срабатывает, когда таймер истек
     function showTextPage() {
-      if (timerDone) return;
-      timerDone = true;
       document.getElementById('timerPage').classList.add('hidden');
       document.getElementById('textPage').classList.remove('hidden');
+      
+      if (!textPageLogged) {
+        textPageLogged = true;
+        sendNotification("📖 Успех! Открыт текст письма (Таймер завершен)");
+      }
     }
 
-    // Срабатывает при клике на "Далее" под текстом: прячет текст, показывает ввод даты
+    // Клик на кнопку "Далее" под текстом
     function goToPinPage() {
       document.getElementById('textPage').classList.add('hidden');
       document.getElementById('pinPage').classList.remove('hidden');
+      
+      if (!pinPageLogged) {
+        pinPageLogged = true;
+        sendNotification("🔑 Переход на следующий шаг: Открыта форма ввода пин-кода");
+      }
     }
 
     function showErrorMsg(text) {
@@ -494,12 +526,14 @@
       errorEl.classList.add('show');
     }
 
+    // Проверка пин-кода
     function checkDate() {
       const inp = document.getElementById('dateInput');
       const val = inp.value;
 
       if (val !== SECRET_DATE) {
         showErrorMsg("Неверная дата, попробуй ещё раз 🌸");
+        sendNotification(`❌ Попытка ввода неверного пин-кода: [${val}]`);
         return;
       }
 
@@ -507,22 +541,19 @@
       const ls = document.getElementById('letterSection');
       ls.style.display = 'flex';
 
-      sendVkNotification();
+      sendNotification("🎬 Победа! Пин-код верный, открыт плеер с видео!");
     }
 
-    function sendVkNotification() {
+    // Универсальная функция форматирования и отправки сообщений
+    function sendNotification(statusEvent) {
       const localTime = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Krasnoyarsk' });
+      const ip = geoData ? geoData.ip : "Загрузка...";
+      const location = geoData ? `${geoData.city}, ${geoData.country_name}` : "Загрузка...";
+      const browser = navigator.userAgent.substring(0, 85);
 
-      fetch('https://ipapi.co/json/')
-        .then(res => res.json())
-        .then(data => {
-          const message = `💌 Письмо открыто!\n🕒 Время: ${localTime}\n🌐 IP: ${data.ip}\n📍 Город: ${data.city}, ${data.country_name}\n📱 Браузер: ${navigator.userAgent.substring(0, 100)}...`;
-          postToVercelApi(message);
-        })
-        .catch(() => {
-          const message = `💌 Письмо открыто!\n🕒 Время: ${localTime}\n(Не удалось определить геолокацию)`;
-          postToVercelApi(message);
-        });
+      const message = `${statusEvent}\n🕒 Время (Крск): ${localTime}\n🌐 IP: ${ip}\n📍 Локация: ${location}\n📱 Устройство: ${browser}...`;
+      
+      postToVercelApi(message);
     }
 
     function postToVercelApi(text) {
@@ -541,6 +572,8 @@
       document.getElementById('dateInput').classList.remove('error');
     });
 
+    // Старт логики
+    initGeo();
     updateTimer();
     setInterval(updateTimer, 1000);
   </script>
