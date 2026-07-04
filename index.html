@@ -330,11 +330,16 @@
   <div id="app">
     <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Секретное письмо для тебя</h1>
 
-    <!-- ЭТАП 1: ТАЙМЕР -->
-    <div class="page" id="timerPage">
+    <div class="page" id="initPage">
+      <div class="heart-icon">🌸</div>
+      <p class="main-title">Подготовка сюрприза...</p>
+      <p class="main-sub">Секундочку, настраиваем кое-что личное для тебя...</p>
+    </div>
+
+    <div class="page hidden" id="timerPage">
       <div class="heart-icon">🌸</div>
       <p class="main-title">Кое-что важное для тебя</p>
-      <p class="main-sub">Я подготовил кое-что особенное.<br>Ещё чуть-чуть — и ты узнаешь.(-1час, ладно подарок)</p>
+      <p class="main-sub">Я подготовил кое-что особенное.<br>Ещё чуть-чуть — и ты узнаешь.</p>
 
       <div class="card">
         <p class="card-label">Осталось подождать</p>
@@ -362,32 +367,13 @@
       </div>
     </div>
 
-    <!-- ЭТАП 2: БОЛЬШОЙ ТЕКСТ -->
     <div class="page hidden" id="textPage">
       <div class="heart-icon">✨</div>
       <p class="main-title">Прежде чем идти дальше...</p>
       <p class="main-sub">Мне хотелось сказать тебе несколько слов.</p>
 
       <div class="card">
-        <div class="story-text">Ассалому Алейкум! Если ты видишь этот текст, значит, таймер успешно дотикал до самого конца.
-
-Честно говоря, мне было непросто начать это письмо. Ведь мы виделись всего пару раз, и я поймал себя на мысли, что почти ничего о тебе не знаю... Но я очень хочу это исправить. 
-
-Я помню, что ты говорила про экзамены (хотя у меня есть подозрение, что это была отличная тактика, чтобы проверить мою настойчивость, и я готов принять этот вызов!). Я мог бы попробовать найти тебя сам, но для меня важно, чтобы всё было с твоего согласия — мне хочется радовать тебя, а не появляться внезапно и нарушать твои планы.
-
-Поэтому я предлагаю встретиться и узнать друг друга лично, настоящих, а не через чьи-то рассказы. Давай просто сделаем этот шаг, а дальше время покажет.
-
-Остался лишь один маленький шаг. Нажми кнопку ниже 👇
-        
-        
-Я не знаю откроешь ли ты эту страницу еще раз, просто ХОТЕЛ ЧТОБЫ ТЫ ЗНАЛА что текст выше переделан через ИИ, мой русский язык не так хорошо, поэтому переделывал, вот текст который сам написал:
-        
-Честно говоря, я не знал с чего начать письмо, потому что я не знаю про тебя почти ничего, я всего лиш видел тебя 2-3 раза, и я хочу это исправить. Я уже писал что надо встеретиться, но ты сказала у тебя экзамены, а хотя я знаю это просто отмазки(и могу это доказать если надо(Случайно увидел твою историю где СЛОВА вроде:"Готовы ли к экзаменам? -что? готовы ли экзамены нашим ответам")), я мог сам тебя найти, просто хочу чтобы было с твоим согласием и ведомством, чтобы взнезапно не выйти с твоей дороги.
-
-И поэтому давай встеретимся узнаем друг друга лично, чем спрашивать у кого либо, и только потом подумаем, а то мы совсем не знаем друг друга.
-        
-и еще причина того что я выбрал тебя, это просто:
-        я увидел тебя несколько раз и почти все это было на свадьбах, и среди всех девушек которые с ног до головы прям сильно сильно накрашены, и тд, ты была обычной, естественной(ну тоже есть макияж, но не сильно как все другие), мне понравилось твоя простота, а остальные черты я не знаю, я могу просто делать выводы исходя из внешности и поведения так как про тебя больше ничего не знаю</div>
+        <div class="story-text">"Время покажет"</div>
       </div>
 
       <button class="open-btn" onclick="goToPinPage()">
@@ -396,7 +382,6 @@
       </button>
     </div>
 
-    <!-- ЭТАП 3: ФОРМА ПИН-КОДА -->
     <div class="page hidden" id="pinPage">
       <div class="heart-icon">🔑</div>
       <p class="main-title">Почти там...</p>
@@ -424,7 +409,6 @@
       </div>
     </div>
 
-    <!-- ЭТАП 4: ВИДЕОПЛЕЕР -->
     <div class="letter-section" id="letterSection">
       <div class="sparkles">✦ ✦ ✦</div>
       <div class="letter-card">
@@ -456,62 +440,110 @@
   </div>
 
   <script>
-    const UNLOCK = new Date(Date.UTC(2026, 5, 19, 14, 30, 0));
+    // НАСТРОЙКА ВРЕМЕНИ ТАЙМЕРА (в часах)
+    // Измени это число, если хочешь сделать таймер на 1 час, 2 часа или оставить 3.
+    const HOURS_TO_WAIT = 3; 
+    
     const SECRET_DATE = '2008-12-08';
 
+    let UNLOCK_DATE = null;
     let geoData = null;
-    let timerStarted = false;
     let textPageLogged = false;
     let pinPageLogged = false;
 
     function pad(n) { return String(n).padStart(2,'0'); }
 
-    // Инициализация получения данных геолокации при загрузке
-    function initGeo() {
+    // Главная функция инициализации при загрузке страницы
+    function initApp() {
+      // 1. Сначала настраиваем/считываем динамический таймер из LocalStorage
+      setupDynamicTimer();
+
+      // 2. Загружаем геоданные
       fetch('https://ipapi.co/json/')
         .then(res => res.json())
         .then(data => { geoData = data; })
         .catch(() => { geoData = { ip: 'Неизвестен', city: 'Неизвестен', country_name: 'Неизвестен' }; })
         .finally(() => {
-          // После попытки получить гео — проверяем первоначальный статус таймера
-          checkInitialState();
+          // 3. После получения гео отправляем статус о входе и запускаем отображение
+          processNavigation();
         });
     }
 
-    function checkInitialState() {
+    function setupDynamicTimer() {
+      let savedTargetTime = localStorage.getItem('secret_letter_target_time');
+
+      if (!savedTargetTime) {
+        // Если зашли ПЕРВЫЙ раз, создаем метку: текущее время + HOURS_TO_WAIT
+        const now = new Date();
+        const targetTime = now.getTime() + (HOURS_TO_WAIT * 60 * 60 * 1000);
+        
+        localStorage.setItem('secret_letter_target_time', targetTime.toString());
+        UNLOCK_DATE = new Date(targetTime);
+        
+        // Пометка скрипту, что нужно отправить уведомление именно о ПЕРВОМ заходе
+        window.isFirstVisit = true;
+      } else {
+        // Если уже заходили ранее, восстанавливаем сохраненное время окончания
+        UNLOCK_DATE = new Date(parseInt(savedTargetTime, 10));
+        window.isFirstVisit = false;
+      }
+    }
+
+    function processNavigation() {
+      // Прячем загрузочный экран
+      document.getElementById('initPage').classList.add('hidden');
+
       const now = new Date();
-      if (UNLOCK - now > 0) {
-        sendNotification("⏳ Пользователь зашел на сайт: Открыт таймер отсчета");
-        timerStarted = true;
+      const diff = UNLOCK_DATE - now;
+
+      if (diff > 0) {
+        // Время еще не истекло — показываем таймер
+        document.getElementById('timerPage').classList.remove('hidden');
+        
+        if (window.isFirstVisit) {
+          sendNotification(`⏳ Впервые открыт сайт! Запущен персональный таймер на ${HOURS_TO_WAIT} ч.`);
+        } else {
+          sendNotification("⏳ Повторный заход на сайт: Всё еще тикает таймер отсчета");
+        }
+        
+        // Запуск тиканья таймера каждую секунду
+        setInterval(updateTimer, 1000);
+        updateTimer();
+      } else {
+        // Время уже вышло — сразу перебрасываем на письмо
+        showTextPage();
       }
     }
 
     function updateTimer() {
       const now = new Date();
-      const diff = UNLOCK - now;
+      const diff = UNLOCK_DATE - now;
+      
       if (diff <= 0) {
         showTextPage();
         return;
       }
+      
       const s = Math.floor(diff / 1000);
       const d = Math.floor(s / 86400);
       const h = Math.floor((s % 86400) / 3600);
       const m = Math.floor((s % 3600) / 60);
       const sec = s % 60;
+      
       document.getElementById('tDays').textContent  = pad(d);
       document.getElementById('tHours').textContent = pad(h);
       document.getElementById('tMins').textContent  = pad(m);
       document.getElementById('tSecs').textContent  = pad(sec);
     }
 
-    // Срабатывает, когда таймер истек
+    // Срабатывает по окончании таймера
     function showTextPage() {
       document.getElementById('timerPage').classList.add('hidden');
       document.getElementById('textPage').classList.remove('hidden');
       
       if (!textPageLogged) {
         textPageLogged = true;
-        sendNotification("📖 Успех! Открыт текст письма (Таймер завершен)");
+        sendNotification("📖 Успех! Таймер завершен, открыт текст письма");
       }
     }
 
@@ -582,10 +614,8 @@
       document.getElementById('dateInput').classList.remove('error');
     });
 
-    // Старт логики
-    initGeo();
-    updateTimer();
-    setInterval(updateTimer, 1000);
+    // Точка входа в приложение
+    window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
