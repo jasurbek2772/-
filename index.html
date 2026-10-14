@@ -11,12 +11,10 @@
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="3000" />
   <meta property="og:image:height" content="3000" />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -24,11 +22,7 @@
       --font-serif: 'Playfair Display', Georgia, serif;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: #FFF5F7;
@@ -37,502 +31,120 @@
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    #app {
-      min-height: 600px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2.5rem 1rem 3rem;
-      background: transparent;
-      width: 100%;
-    }
-
-    .page { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 1.5rem; 
-      width: 100%; 
-      max-width: 500px; 
-      animation: fadeUp 0.5s ease forwards;
-    }
-    
-    .page.hidden { 
-      display: none; 
-    }
-
-    .heart-icon {
-      width: 80px; 
-      height: 80px; 
-      border-radius: 50%;
-      background: linear-gradient(135deg, #F4C0D1, #ED93B1);
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      font-size: 36px;
-      box-shadow: 0 4px 24px #ED93B144;
-    }
-
-    .main-title {
-      font-size: 24px; 
-      font-weight: 500; 
-      color: #D4537E; 
-      text-align: center; 
-      line-height: 1.4;
-    }
-    
-    .main-sub {
-      font-size: 15px; 
-      color: #993556; 
-      text-align: center; 
-      line-height: 1.6; 
-      opacity: 0.8;
-    }
-
-    .card {
-      background: #FBEAF0; 
-      border: 0.5px solid #F4C0D1;
-      border-radius: 16px; 
-      padding: 1.5rem 1.75rem; 
-      width: 100%;
-    }
-
-    .story-text {
-      font-family: var(--font-serif);
-      font-size: 16px;
-      color: #4B1528;
-      line-height: 1.8;
-      white-space: pre-wrap;
-      text-align: left;
-    }
-
-    .card-label {
-      font-size: 11px; 
-      color: #993556; 
-      letter-spacing: 0.1em; 
-      text-transform: uppercase;
-      text-align: center; 
-      margin-bottom: 1rem; 
-      opacity: 0.7;
-    }
-
-    .timer-row {
-      display: flex; 
-      align-items: flex-start; 
-      justify-content: center; 
-      gap: 6px;
-    }
-    
-    .timer-unit { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 4px; 
-    }
-    
-    .timer-num {
-      font-size: 32px; 
-      font-weight: 500; 
-      color: #D4537E;
-      font-variant-numeric: tabular-nums; 
-      line-height: 1;
-    }
-    
-    .timer-u-label { 
-      font-size: 11px; 
-      color: #993556; 
-      opacity: 0.6; 
-    }
-    
-    .timer-sep { 
-      font-size: 28px; 
-      color: #ED93B1; 
-      font-weight: 500; 
-      padding-top: 2px; 
-      line-height: 1; 
-    }
-
-    .pin-section { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 1rem; 
-      width: 100%; 
-    }
-    
-    .pin-label { 
-      font-size: 15px; 
-      color: #D4537E; 
-      text-align: center; 
-      font-weight: 500; 
-    }
-
-    #dateInput {
-      width: 100%; 
-      padding: 12px 16px; 
-      font-size: 16px;
-      border: 1.5px solid #ED93B1; 
-      border-radius: 12px;
-      background: white; 
-      color: #993556;
-      outline: none; 
-      font-family: var(--font-sans);
-      transition: border-color 0.2s;
-      text-align: center;
-    }
-    
-    #dateInput:focus { 
-      border-color: #D4537E; 
-      box-shadow: 0 0 0 3px #F4C0D144; 
-    }
-    
-    #dateInput.error { 
-      border-color: #E24B4A; 
-      background: #FFF0F0; 
-      animation: shake 0.4s ease; 
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-6px); }
-      40% { transform: translateX(6px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
-    }
-
-    .pin-error { 
-      font-size: 13px; 
-      color: #E24B4A; 
-      min-height: 18px; 
-      opacity: 0; 
-      transition: opacity 0.2s; 
-      text-align: center; 
-    }
-    
-    .pin-error.show { 
-      opacity: 1; 
-    }
-    
-    .pin-hint {
-      font-size: 13px; 
-      color: #993556; 
-      text-align: center; 
-      line-height: 1.6;
-      background: #F4C0D144; 
-      border: 0.5px solid #F4C0D1;
-      border-radius: 10px; 
-      padding: 0.75rem 1rem; 
-      opacity: 0.9;
-      display: flex; 
-      align-items: flex-start; 
-      gap: 10px;
-      width: 100%;
-    }
-
-    .pin-hint-text {
-      text-align: left;
-      flex: 1;
-    }
-
-    .open-btn {
-      padding: 12px 32px; 
-      background: #D4537E; 
-      color: white;
-      border: none; 
-      border-radius: 99px; 
-      font-size: 16px; 
-      font-weight: 500;
-      cursor: pointer; 
-      font-family: var(--font-sans);
-      transition: background 0.2s, transform 0.1s;
-      display: flex; 
-      align-items: center; 
-      gap: 8px;
-    }
-    
-    .open-btn:hover { 
-      background: #993556; 
-    }
-    
-    .open-btn:active { 
-      transform: scale(0.97); 
+      padding: 2.5rem 1rem;
     }
 
     .letter-section {
-      display: none; 
-      flex-direction: column; 
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 1.5rem; 
-      width: 100%; 
+      gap: 1.5rem;
+      width: 100%;
       max-width: 520px;
       animation: fadeUp 0.7s ease forwards;
     }
-    
+
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .letter-card {
-      background: #FBEAF0; 
+      background: #FBEAF0;
       border: 0.5px solid #F4C0D1;
-      border-radius: 20px; 
-      padding: 2.5rem 2rem; 
-      width: 100%; 
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      width: 100%;
       position: relative;
       box-shadow: 0 2px 32px #ED93B122;
     }
-    
-    .letter-quote { 
-      position: absolute; 
-      top: 1rem; 
-      left: 1.5rem; 
-      font-size: 56px; 
-      line-height: 1; 
-      color: #F4C0D1; 
-      font-family: var(--font-serif); 
-      user-select: none; 
-    }
-    
-    .letter-text { 
-      font-size: 16px; 
-      color: #4B1528; 
-      line-height: 1.9; 
-      padding-top: 1.75rem; 
-      white-space: pre-wrap; 
-      font-family: var(--font-serif); 
-    }
-    
-    .letter-sign { 
-      text-align: right; 
-      font-size: 15px; 
-      color: #993556; 
-      font-style: italic; 
-      padding-top: 1.25rem; 
-      border-top: 0.5px solid #F4C0D1; 
-      margin-top: 1.25rem; 
-      font-family: var(--font-serif); 
+
+    .letter-quote {
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      font-size: 56px;
+      line-height: 1;
+      color: #F4C0D1;
+      font-family: var(--font-serif);
+      user-select: none;
     }
 
-    .sparkles { 
-      font-size: 20px; 
-      display: flex; 
-      gap: 12px; 
-      justify-content: center; 
-      color: #D4537E; 
+    .letter-content {
+      padding-top: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .video-title {
+      font-size: 16px;
+      color: #993556;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .video-frame {
+      width: 100%;
+      height: 280px;
+      border: 1px solid #F4C0D1;
+      border-radius: 12px;
+    }
+
+    .letter-sign {
+      text-align: right;
+      font-size: 15px;
+      color: #993556;
+      font-style: italic;
+      padding-top: 1.25rem;
+      border-top: 0.5px solid #F4C0D1;
+      margin-top: 1.25rem;
+      font-family: var(--font-serif);
+    }
+
+    .letter-sign a {
+      color: #993556;
+      text-decoration: none;
+      border-bottom: 1px dashed #ED93B1;
+    }
+
+    .sparkles {
+      font-size: 20px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      color: #D4537E;
     }
   </style>
 </head>
 <body>
 
-  
+  <div class="letter-section">
+    <div class="sparkles">✦ ✦ ✦</div>
 
-    <div class="letter-section" id="letterSection">
-      <div class="sparkles">✦ ✦ ✦</div>
-      <div class="letter-card">
-        <span class="letter-quote" aria-hidden="true">"</span>
-        
-        <div class="letter-text" id="letterText" style="padding-top: 1.75rem; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;">
-          
-          <p style="font-family: var(--font-sans); font-size: 16px; color: #993556; font-weight: 500; text-align: center; margin: 0;">
-            "Элементарно" 1:10:00
-          </p>
-          
-          <iframe src="https://vk.com/video_ext.php?oid=-228160277&id=456240254&hash=d8c5b5676f0e826e&hd=2&t=4200" 
-                  width="100%" 
-                  height="280" 
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" 
-                  frameborder="0" 
-                  allowfullscreen 
-                  style="border-radius: 12px; border: 1px solid #F4C0D1;">
-          </iframe>
-          
-        </div>
-        
-        <div class="letter-sign">
-          <a href="https://t.me/jasurbek27" target="_blank" style="color: #993556; text-decoration: none; border-bottom: 1px dashed #ED93B1;">Jasur</a>
-        </div>
+    <div class="letter-card">
+      <span class="letter-quote" aria-hidden="true">"</span>
+
+      <div class="letter-content">
+        <p class="video-title">"Элементарно" 1:10:00</p>
+
+        <iframe class="video-frame"
+                src="https://vk.com/video_ext.php?oid=-228160277&id=456240254&hash=d8c5b5676f0e826e&hd=2&t=4200"
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;"
+                frameborder="0"
+                allowfullscreen>
+        </iframe>
       </div>
-      <div class="sparkles">✦ ✦ ✦</div>
+
+      <div class="letter-sign">
+        <a href="https://t.me/jasurbek27" target="_blank">Jasur</a>
+      </div>
     </div>
+
+    <div class="sparkles">✦ ✦ ✦</div>
   </div>
 
-  <script>
-    // НАСТРОЙКА ВРЕМЕНИ ТАЙМЕРА (в часах)
-    // Измени это число, если хочешь сделать таймер на 1 час, 2 часа или оставить 3.
-    const HOURS_TO_WAIT = 3; 
-    
-    const SECRET_DATE = '2008-12-08';
-
-    let UNLOCK_DATE = null;
-    let geoData = null;
-    let textPageLogged = false;
-    let pinPageLogged = false;
-
-    function pad(n) { return String(n).padStart(2,'0'); }
-
-    // Главная функция инициализации при загрузке страницы
-    function initApp() {
-      // 1. Сначала настраиваем/считываем динамический таймер из LocalStorage
-      setupDynamicTimer();
-
-      // 2. Загружаем геоданные
-      fetch('https://ipapi.co/json/')
-        .then(res => res.json())
-        .then(data => { geoData = data; })
-        .catch(() => { geoData = { ip: 'Неизвестен', city: 'Неизвестен', country_name: 'Неизвестен' }; })
-        .finally(() => {
-          // 3. После получения гео отправляем статус о входе и запускаем отображение
-          processNavigation();
-        });
-    }
-
-    function setupDynamicTimer() {
-      let savedTargetTime = localStorage.getItem('secret_letter_target_time');
-
-      if (!savedTargetTime) {
-        // Если зашли ПЕРВЫЙ раз, создаем метку: текущее время + HOURS_TO_WAIT
-        const now = new Date();
-        const targetTime = now.getTime() + (HOURS_TO_WAIT * 60 * 60 * 1000);
-        
-        localStorage.setItem('secret_letter_target_time', targetTime.toString());
-        UNLOCK_DATE = new Date(targetTime);
-        
-        // Пометка скрипту, что нужно отправить уведомление именно о ПЕРВОМ заходе
-        window.isFirstVisit = true;
-      } else {
-        // Если уже заходили ранее, восстанавливаем сохраненное время окончания
-        UNLOCK_DATE = new Date(parseInt(savedTargetTime, 10));
-        window.isFirstVisit = false;
-      }
-    }
-
-    function processNavigation() {
-      // Прячем загрузочный экран
-      document.getElementById('initPage').classList.add('hidden');
-
-      const now = new Date();
-      const diff = UNLOCK_DATE - now;
-
-      if (diff > 0) {
-        // Время еще не истекло — показываем таймер
-        document.getElementById('timerPage').classList.remove('hidden');
-        
-        if (window.isFirstVisit) {
-          sendNotification(`⏳ Впервые открыт сайт! Запущен персональный таймер на ${HOURS_TO_WAIT} ч.`);
-        } else {
-          sendNotification("⏳ Повторный заход на сайт: Всё еще тикает таймер отсчета");
-        }
-        
-        // Запуск тиканья таймера каждую секунду
-        setInterval(updateTimer, 1000);
-        updateTimer();
-      } else {
-        // Время уже вышло — сразу перебрасываем на письмо
-        showTextPage();
-      }
-    }
-
-    function updateTimer() {
-      const now = new Date();
-      const diff = UNLOCK_DATE - now;
-      
-      if (diff <= 0) {
-        showTextPage();
-        return;
-      }
-      
-      const s = Math.floor(diff / 1000);
-      const d = Math.floor(s / 86400);
-      const h = Math.floor((s % 86400) / 3600);
-      const m = Math.floor((s % 3600) / 60);
-      const sec = s % 60;
-      
-      document.getElementById('tDays').textContent  = pad(d);
-      document.getElementById('tHours').textContent = pad(h);
-      document.getElementById('tMins').textContent  = pad(m);
-      document.getElementById('tSecs').textContent  = pad(sec);
-    }
-
-    // Срабатывает по окончании таймера
-    function showTextPage() {
-      document.getElementById('timerPage').classList.add('hidden');
-      document.getElementById('textPage').classList.remove('hidden');
-      
-      if (!textPageLogged) {
-        textPageLogged = true;
-        sendNotification("📖 Успех! Таймер завершен, открыт текст письма");
-      }
-    }
-
-    // Клик на кнопку "Далее" под текстом
-    function goToPinPage() {
-      document.getElementById('textPage').classList.add('hidden');
-      document.getElementById('pinPage').classList.remove('hidden');
-      
-      if (!pinPageLogged) {
-        pinPageLogged = true;
-        sendNotification("🔑 Переход на следующий шаг: Открыта форма ввода пин-кода");
-      }
-    }
-
-    function showErrorMsg(text) {
-      const inp = document.getElementById('dateInput');
-      const errorEl = document.getElementById('pinError');
-      errorEl.textContent = text;
-      errorEl.style.color = '#E24B4A';
-      inp.classList.add('error');
-      setTimeout(() => inp.classList.remove('error'), 1000);
-      errorEl.classList.add('show');
-    }
-
-    // Проверка пин-кода
-    function checkDate() {
-      const inp = document.getElementById('dateInput');
-      const val = inp.value;
-
-      if (val !== SECRET_DATE) {
-        showErrorMsg("Неверная дата, попробуй ещё раз 🌸");
-        sendNotification(`❌ Попытка ввода неверного пин-кода: [${val}]`);
-        return;
-      }
-
-      
-      sendNotification("🎬 Победа! Пин-код верный, открыт плеер с видео!");
-    }
-
-    // Универсальная функция форматирования и отправки сообщений
-    function sendNotification(statusEvent) {
-      const localTime = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Krasnoyarsk' });
-      const ip = geoData ? geoData.ip : "Загрузка...";
-      const location = geoData ? `${geoData.city}, ${geoData.country_name}` : "Загрузка...";
-      const browser = navigator.userAgent.substring(0, 85);
-
-      const message = `${statusEvent}\n🕒 Время (Крск): ${localTime}\n🌐 IP: ${ip}\n📍 Локация: ${location}\n📱 Устройство: ${browser}...`;
-      
-      postToVercelApi(message);
-    }
-
-    function postToVercelApi(text) {
-      fetch('/api/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text })
-      })
-      .then(res => res.json())
-      .catch(err => console.error('Ошибка логирования:', err));
-    }
-
-    document.getElementById('dateInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') checkDate();
-      document.getElementById('pinError').classList.remove('show');
-      document.getElementById('dateInput').classList.remove('error');
-    });
-
-    // Точка входа в приложение
-    window.addEventListener('DOMContentLoaded', initApp);
-  </script>
 </body>
 </html>
