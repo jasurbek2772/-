@@ -327,46 +327,7 @@
 </head>
 <body>
 
-  <div id="app">
-    <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Секретное письмо для тебя</h1>
-
-    <div class="page" id="initPage">
-      <div class="heart-icon">🌸</div>
-      <p class="main-title">Подготовка сюрприза...</p>
-      <p class="main-sub">Секундочку, настраиваем кое-что личное для тебя...</p>
-    </div>
-
-    <div class="page hidden" id="timerPage">
-      <div class="heart-icon">🌸</div>
-      <p class="main-title"></p>
-      <p class="main-sub"></p>
-
-      <div class="card">
-        <p class="card-label">Осталось подождать</p>
-        <div class="timer-row">
-          <div class="timer-unit">
-            <span class="timer-num" id="tDays">00</span>
-            <span class="timer-u-label">дней</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-unit">
-            <span class="timer-num" id="tHours">00</span>
-            <span class="timer-u-label">часов</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-unit">
-            <span class="timer-num" id="tMins">00</span>
-            <span class="timer-u-label">минут</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-unit">
-            <span class="timer-num" id="tSecs">00</span>
-            <span class="timer-u-label">секунд</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  
 
     <div class="letter-section" id="letterSection">
       <div class="sparkles">✦ ✦ ✦</div>
@@ -538,10 +499,7 @@
         return;
       }
 
-      document.getElementById('pinPage').classList.add('hidden');
-      const ls = document.getElementById('letterSection');
-      ls.style.display = 'flex';
-
+      
       sendNotification("🎬 Победа! Пин-код верный, открыт плеер с видео!");
     }
 
