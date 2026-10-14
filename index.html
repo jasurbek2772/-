@@ -146,5 +146,18 @@
     <div class="sparkles">✦ ✦ ✦</div>
   </div>
 
+  <script>
+    // Одно уведомление при открытии страницы
+    window.addEventListener('DOMContentLoaded', () => {
+      const time = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Krasnoyarsk' });
+
+      fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: `🎬 Страница открыта\n🕒 Время (Крск): ${time}` })
+      }).catch(err => console.error('Ошибка уведомления:', err));
+    });
+  </script>
+
 </body>
 </html>
